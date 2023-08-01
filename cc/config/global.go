@@ -160,6 +160,8 @@ var (
 		// Enable MLGO for register allocation.
 		"-mllvm -regalloc-enable-advisor=release",
 
+		// Enable Hot Cold splitting optimization.
+		"-mllvm -hot-cold-split=true",
 	}
 
 	commonGlobalLldflags = []string{
