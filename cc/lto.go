@@ -166,6 +166,11 @@ func (lto *lto) flags(ctx BaseModuleContext, flags Flags) Flags {
 			flags.Local.LdFlags = append(flags.Local.LdFlags,
 				"-Wl,-mllvm,-unroll-threshold=600")
 		}
+		// For ML training
+		if ctx.Config().IsEnvTrue("THINLTO_EMIT_INDEXES_AND_IMPORTS") {
+			ltoLdFlag = "-Wl,--save-temps=import"
+			ltoLdFlag = "-Wl,--thinlto-emit-index-files"
+		}
 	}
 	return flags
 }
