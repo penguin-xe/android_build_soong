@@ -128,8 +128,6 @@ var (
 		// option -Wunguarded-availability is on or not.
 		"-D__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__",
 
-		// Turn off FMA which got enabled by default in clang-r445002 (http://b/218805949)
-		"-ffp-contract=off",
 	}
 
 	commonGlobalConlyflags = []string{}
