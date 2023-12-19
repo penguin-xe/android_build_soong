@@ -101,6 +101,7 @@ func (lto *lto) flags(ctx BaseModuleContext, flags Flags) Flags {
 	if lto.LTO(ctx) {
 		var ltoCFlag string
 		var ltoLdFlag string
+		var ltoCOnlyFlags []string
 		if lto.ThinLTO() {
 			// TODO(b/129607781) sdclang does not currently support
 			// the "-fsplit-lto-unit" option
@@ -120,6 +121,21 @@ func (lto *lto) flags(ctx BaseModuleContext, flags Flags) Flags {
 		flags.Local.AsFlags = append(flags.Local.AsFlags, ltoCFlag)
 		flags.Local.LdFlags = append(flags.Local.LdFlags, ltoCFlag)
 		flags.Local.LdFlags = append(flags.Local.LdFlags, ltoLdFlag)
+		flags.Local.CFlags = append(flags.Local.CFlags, ltoCOnlyFlags...)
+
+		// Enable Polly globally
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-parallel")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-ast-use-context")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-invariant-load-hoisting")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-run-inliner")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-loopfusion-greedy=1")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-reschedule=1")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-postopts=1")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-omp-backend=LLVM")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-scheduling=dynamic")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-scheduling-chunksize=1")
+		ltoCOnlyFlags = append(ltoCOnlyFlags, "-mllvm -polly-vectorizer=stripmine")
 
 		if Bool(lto.Properties.Whole_program_vtables) {
 			flags.Local.CFlags = append(flags.Local.CFlags, "-fwhole-program-vtables")
