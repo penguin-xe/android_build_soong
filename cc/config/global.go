@@ -160,8 +160,6 @@ var (
 		// Enable MLGO for register allocation.
 		"-mllvm -regalloc-enable-advisor=release",
 
-		// Emit additional debug info for AutoFDO
-		"-fdebug-info-for-profiling",
 	}
 
 	commonGlobalLldflags = []string{
